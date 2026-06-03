@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Venta de Lu</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="container hero-content">
+      <div>
+        <span class="eyebrow">Venta de Lu</span>
+        <h1>Objetos, ropa y cosas seleccionadas</h1>
+        <p class="subtitle">Objetos, ropa y cosas seleccionadas en excelente estado. Zona Nordelta / Villanueva.</p>
+        <p class="note">Consultas y coordinación por WhatsApp</p>
+      </div>
+      <div class="hero-card">
+        <p class="hero-card-title">Catálogo privado</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="controls-card">
+      <div class="search-section">
+        <label class="label" for="searchInput">Buscar</label>
+        <div class="search-row">
+          <input id="searchInput" type="search" placeholder="Buscar por nombre, categoría, marca o descripción" aria-label="Buscar productos">
+          <button id="clearSearch" class="btn secondary">Limpiar</button>
+        </div>
+      </div>
+
+      <div class="filters-row">
+        <div class="filter-group">
+          <label for="categoryFilter">Categoría</label>
+          <select id="categoryFilter">
+            <option value="Todos">Todos</option>
+            <option value="Ropa">Ropa</option>
+            <option value="Muebles">Muebles</option>
+            <option value="Deco">Deco</option>
+            <option value="Cocina">Cocina</option>
+            <option value="Electro">Electro</option>
+            <option value="Otros">Otros</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="statusFilter">Estado</label>
+          <select id="statusFilter">
+            <option value="Todos">Todos</option>
+            <option value="Disponible">Disponible</option>
+            <option value="Reservado">Reservado</option>
+            <option value="Vendido">Vendido</option>
+          </select>
+        </div>
+
+        <button id="clearFilters" class="btn secondary filter-clear">Limpiar filtros</button>
+      </div>
+
+      <div class="results">
+        <span id="resultsCount">0 productos encontrados</span>
+      </div>
+    </section>
+
+    <section id="productsGrid" class="products-grid" aria-live="polite">
+      <!-- Productos se inyectan desde app.js -->
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">Venta de Lu · Nordelta / Villanueva</div>
+  </footer>
+
+  <script src="productos.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
