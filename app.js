@@ -13,7 +13,7 @@ const statusFilter = document.getElementById('statusFilter');
 const clearFilters = document.getElementById('clearFilters');
 const resultsCount = document.getElementById('resultsCount');
 
-const estadoOrden = { 'Disponible': 0, 'Reservado': 1, 'Vendido': 2 };
+const estadoOrden = { 'Nuevo': 0, 'Usado impecable': 1, 'Usado buen estado': 2, 'Usado': 3 };
 let lightboxState = null;
 let lightboxElements = null;
 
@@ -219,19 +219,20 @@ function crearWhatsAppLink(product) {
 }
 
 function renderCard(product) {
-  const estado = product.estado || 'Disponible';
+  const estado = product.estado || 'Usado';
+  const disponibilidad = product.disponibilidad || 'Disponible';
   const card = document.createElement('article');
-  card.className = `product-card${estado === 'Vendido' ? ' sold' : ''}`;
+  card.className = `product-card${disponibilidad === 'Vendido' ? ' sold' : ''}`;
 
   const media = document.createElement('div');
   media.className = 'product-media';
 
-  if (estado === 'Vendido') {
+  if (disponibilidad === 'Vendido') {
     const badge = document.createElement('div');
     badge.className = 'sold-badge';
     badge.textContent = 'Vendido';
     media.appendChild(badge);
-  } else if (estado === 'Reservado') {
+  } else if (disponibilidad === 'Reservado') {
     const badge = document.createElement('div');
     badge.className = 'reserved-badge';
     badge.textContent = 'Reservado';
@@ -264,12 +265,10 @@ function renderCard(product) {
     meta.appendChild(brandSpan);
   }
 
-  if (product.condicion) {
-    const conditionSpan = document.createElement('span');
-    conditionSpan.className = 'condition';
-    conditionSpan.textContent = product.condicion;
-    meta.appendChild(conditionSpan);
-  }
+  const estadoChip = document.createElement('span');
+  estadoChip.className = `condition ${estado === 'Nuevo' ? 'nuevo' : estado === 'Usado impecable' ? 'impecable' : estado === 'Usado buen estado' ? 'buen-estado' : 'usado'}`;
+  estadoChip.textContent = estado;
+  meta.appendChild(estadoChip);
 
   const desc = document.createElement('p');
   desc.className = 'product-desc';
@@ -282,10 +281,6 @@ function renderCard(product) {
   price.className = 'price';
   price.textContent = product.precio ? formatARS(product.precio) : 'Consultar precio';
 
-  const chip = document.createElement('div');
-  chip.className = `chip ${estado === 'Disponible' ? 'disponible' : estado === 'Reservado' ? 'reservado' : 'vendido'}`;
-  chip.textContent = estado;
-
   const link = document.createElement('a');
   link.className = 'whatsapp';
   link.href = crearWhatsAppLink(product);
@@ -294,7 +289,6 @@ function renderCard(product) {
   link.textContent = 'Consultar por WhatsApp';
 
   footer.appendChild(price);
-  footer.appendChild(chip);
   footer.appendChild(link);
 
   body.appendChild(title);
@@ -340,7 +334,7 @@ function applyFilters() {
 
   const results = productos
     .filter(producto => {
-      const text = [producto.nombre, producto.categoria, producto.marca, producto.descripcion]
+      const text = [producto.nombre, producto.categoria, producto.estado, producto.marca, producto.descripcion]
         .filter(Boolean)
         .join(' ')
         .toLowerCase();
