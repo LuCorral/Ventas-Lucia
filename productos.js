@@ -314,9 +314,9 @@ const productos = [
     descripcion:
       "Sweater negro nuevo, de calidad premium. Modelo corto con mangas globo y tejido gruesito. Tiene un diseño moderno y canchero, ideal para usar con jeans, pantalón tiro alto o polleras.",
     imagenes: [
+      "img/Sweater negro globo 2.jpeg",
       "img/Sweater negro globo 1.jpeg",
-      "img/Sweater negro globo.jpeg",
-      "img/Sweater negro globo 2.jpeg"
+      "img/Sweater negro globo.jpeg"
     ],
     destacado: false
   },
