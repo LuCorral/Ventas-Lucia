@@ -267,5 +267,93 @@ const productos = [
       "img/Polera Rochas 1.jpeg"
     ],
     destacado: false
+  },
+    {
+    id: 15,
+    nombre: "Remera de hilo rayada Lefties",
+    precio: 20000,
+    categoria: "Ropa",
+    estado: "Disponible",
+    marca: "Lefties",
+    talle: "XS, va bien para S y hasta M",
+    condicion: "Nueva",
+    descripcion:
+      "Remera de hilo Lefties, rayada en blanco y negro. Talle XS, pero va bien para un S y hasta un M por el tipo de tejido. Nueva. Ideal para usar sola o debajo de blazer, camisa o campera.",
+    imagenes: [
+      "img/Remera Lefties.jpeg"
+    ],
+    destacado: false
+  },
+
+  {
+    id: 16,
+    nombre: "Remera negra de hilo Primark",
+    precio: 20000,
+    categoria: "Ropa",
+    estado: "Disponible",
+    marca: "Primark",
+    talle: "S",
+    condicion: "Nueva",
+    descripcion:
+      "Remera negra de hilo Primark, talle S. Nueva. Modelo sin mangas, básico y súper combinable. Ideal para usar con jeans, pantalones sastreros, polleras o debajo de camisas y blazers.",
+    imagenes: [
+      "img/Remera primark.jpeg"
+    ],
+    destacado: false
+  },
+
+  {
+    id: 17,
+    nombre: "Ruanas nuevas con flecos",
+    precio: 22000,
+    categoria: "Ropa",
+    estado: "Disponible",
+    marca: "Sin marca",
+    talle: "Único",
+    condicion: "Nuevas",
+    descripcion:
+      "Ruanas nuevas con flecos, disponibles en color marfil y mostaza. Talle único. Son cómodas, abrigadas y fáciles de combinar. Precio por unidad: $22.000. Promo por las dos: $40.000.",
+    imagenes: [
+      "img/Ruana marfil.jpeg",
+      "img/Ruana.jpeg"
+    ],
+    destacado: false
+  },
+
+  {
+    id: 18,
+    nombre: "Sweater negro manga globo",
+    precio: 40000,
+    categoria: "Ropa",
+    estado: "Disponible",
+    marca: "Sin marca",
+    talle: "unico", // TODO: completar talle si lo sabés
+    condicion: "Nuevo",
+    descripcion:
+      "Sweater negro nuevo, de calidad premium. Modelo corto con mangas globo y tejido gruesito. Tiene un diseño moderno y canchero, ideal para usar con jeans, pantalón tiro alto o polleras.",
+    imagenes: [
+      "img/Sweater negro globo.jpeg",
+      "img/Sweater negro globo 1.jpeg",
+      "img/Sweater negro globo 2.jpeg"
+    ],
+    destacado: false
+  },
+
+  {
+    id: 19,
+    nombre: "Sweater polera color camel",
+    precio: 40000,
+    categoria: "Ropa",
+    estado: "Disponible",
+    marca: "Sin marca",
+    talle: "unico", // TODO: completar talle si lo sabés
+    condicion: "Nuevo",
+    descripcion:
+      "Sweater polera nuevo, color camel, de calidad premium. Modelo corto, con cuello alto y tejido abrigado. Ideal para looks de invierno, para usar con jean tiro alto, pantalón sastrero o falda.",
+    imagenes: [
+      "img/Sweater polera.jpeg",
+      "img/Sweater polera 1.jpeg"
+    ],
+    destacado: false
   }
 ];

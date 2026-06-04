@@ -14,6 +14,8 @@ const clearFilters = document.getElementById('clearFilters');
 const resultsCount = document.getElementById('resultsCount');
 
 const estadoOrden = { 'Disponible': 0, 'Reservado': 1, 'Vendido': 2 };
+let lightboxState = null;
+let lightboxElements = null;
 
 function formatARS(value) {
   try {
@@ -29,10 +31,184 @@ function formatARS(value) {
 }
 
 function handleBrokenImage(img) {
-  const wrap = img.closest('.product-media');
+  const wrap = img.closest('.product-image-wrap');
   if (!wrap) return;
   wrap.innerHTML = '<div class="img-placeholder">Imagen no disponible</div>';
 }
+
+function getLightboxElements() {
+  if (lightboxElements) return lightboxElements;
+
+  const overlay = document.createElement('div');
+  overlay.className = 'lightbox';
+  overlay.setAttribute('role', 'dialog');
+  overlay.setAttribute('aria-modal', 'true');
+  overlay.setAttribute('aria-label', 'Vista ampliada de producto');
+
+  const close = document.createElement('button');
+  close.type = 'button';
+  close.className = 'lightbox-close';
+  close.setAttribute('aria-label', 'Cerrar imagen ampliada');
+  close.textContent = 'X';
+
+  const prev = document.createElement('button');
+  prev.type = 'button';
+  prev.className = 'lightbox-arrow lightbox-prev';
+  prev.setAttribute('aria-label', 'Foto anterior');
+  prev.textContent = '<';
+
+  const next = document.createElement('button');
+  next.type = 'button';
+  next.className = 'lightbox-arrow lightbox-next';
+  next.setAttribute('aria-label', 'Foto siguiente');
+  next.textContent = '>';
+
+  const figure = document.createElement('figure');
+  figure.className = 'lightbox-figure';
+
+  const img = document.createElement('img');
+  img.className = 'lightbox-image';
+
+  const caption = document.createElement('figcaption');
+  caption.className = 'lightbox-caption';
+
+  figure.appendChild(img);
+  figure.appendChild(caption);
+  overlay.appendChild(close);
+  overlay.appendChild(prev);
+  overlay.appendChild(figure);
+  overlay.appendChild(next);
+  document.body.appendChild(overlay);
+
+  overlay.addEventListener('click', (event) => {
+    if (event.target === overlay) closeLightbox();
+  });
+  close.addEventListener('click', closeLightbox);
+  prev.addEventListener('click', () => changeLightboxImage(-1));
+  next.addEventListener('click', () => changeLightboxImage(1));
+
+  lightboxElements = { overlay, close, prev, next, img, caption };
+  return lightboxElements;
+}
+
+function openLightbox(product, imagenes, startIndex) {
+  lightboxState = {
+    product,
+    imagenes,
+    activeIndex: startIndex
+  };
+
+  const { overlay, close } = getLightboxElements();
+  updateLightbox();
+  overlay.classList.add('open');
+  document.body.classList.add('no-scroll');
+  close.focus();
+}
+
+function closeLightbox() {
+  if (!lightboxElements) return;
+  lightboxElements.overlay.classList.remove('open');
+  document.body.classList.remove('no-scroll');
+  lightboxState = null;
+}
+
+function changeLightboxImage(step) {
+  if (!lightboxState) return;
+  const total = lightboxState.imagenes.length;
+  lightboxState.activeIndex = (lightboxState.activeIndex + step + total) % total;
+  updateLightbox();
+}
+
+function updateLightbox() {
+  if (!lightboxState || !lightboxElements) return;
+
+  const { product, imagenes, activeIndex } = lightboxState;
+  const { prev, next, img, caption } = lightboxElements;
+  img.src = imagenes[activeIndex];
+  img.alt = `${product.nombre || 'Producto'} - foto ${activeIndex + 1}`;
+  caption.textContent = `${product.nombre || 'Producto'} - Foto ${activeIndex + 1} de ${imagenes.length}`;
+
+  const showControls = imagenes.length > 1;
+  prev.hidden = !showControls;
+  next.hidden = !showControls;
+}
+
+function renderProductCarousel(product, imagenes) {
+  let activeIndex = 0;
+
+  const carousel = document.createElement('div');
+  carousel.className = 'product-carousel';
+
+  const imageWrap = document.createElement('div');
+  imageWrap.className = 'product-image-wrap';
+  carousel.appendChild(imageWrap);
+
+  const dots = document.createElement('div');
+  dots.className = 'carousel-dots';
+
+  const dotButtons = imagenes.map((_, index) => {
+    const dot = document.createElement('button');
+    dot.type = 'button';
+    dot.className = 'carousel-dot';
+    dot.setAttribute('aria-label', `Ver foto ${index + 1}`);
+    dot.addEventListener('click', () => updateImage(index));
+    dots.appendChild(dot);
+    return dot;
+  });
+
+  function updateImage(nextIndex) {
+    activeIndex = (nextIndex + imagenes.length) % imagenes.length;
+    imageWrap.innerHTML = '';
+
+    const img = document.createElement('img');
+    img.src = imagenes[activeIndex];
+    img.alt = `${product.nombre || 'Producto'} - foto ${activeIndex + 1}`;
+    img.loading = activeIndex === 0 ? 'eager' : 'lazy';
+    img.onerror = () => handleBrokenImage(img);
+    img.addEventListener('click', () => openLightbox(product, imagenes, activeIndex));
+    imageWrap.appendChild(img);
+
+    dotButtons.forEach((dot, index) => {
+      dot.classList.toggle('active', index === activeIndex);
+      dot.setAttribute('aria-current', index === activeIndex ? 'true' : 'false');
+    });
+  }
+
+  if (imagenes.length > 1) {
+    const prev = document.createElement('button');
+    prev.type = 'button';
+    prev.className = 'carousel-arrow carousel-arrow-prev';
+    prev.setAttribute('aria-label', 'Foto anterior');
+    prev.textContent = '<';
+    prev.addEventListener('click', () => updateImage(activeIndex - 1));
+
+    const next = document.createElement('button');
+    next.type = 'button';
+    next.className = 'carousel-arrow carousel-arrow-next';
+    next.setAttribute('aria-label', 'Foto siguiente');
+    next.textContent = '>';
+    next.addEventListener('click', () => updateImage(activeIndex + 1));
+
+    carousel.appendChild(prev);
+    carousel.appendChild(next);
+    carousel.appendChild(dots);
+  }
+
+  updateImage(0);
+  return carousel;
+}
+
+document.addEventListener('keydown', (event) => {
+  if (!lightboxState) return;
+
+  if (event.key === 'Escape') {
+    closeLightbox();
+  } else if (event.key === 'ArrowLeft') {
+    changeLightboxImage(-1);
+  } else if (event.key === 'ArrowRight') {
+    changeLightboxImage(1);
+  }
+});
 
 function crearWhatsAppLink(product) {
   const nombre = product.nombre || 'este producto';
@@ -62,13 +238,9 @@ function renderCard(product) {
     media.appendChild(badge);
   }
 
-  const imgSrc = Array.isArray(product.imagenes) && product.imagenes.length ? product.imagenes[0] : null;
-  if (imgSrc) {
-    const img = document.createElement('img');
-    img.src = imgSrc;
-    img.alt = product.nombre || 'Producto';
-    img.onerror = () => handleBrokenImage(img);
-    media.appendChild(img);
+  const imagenes = Array.isArray(product.imagenes) ? product.imagenes.filter(Boolean) : [];
+  if (imagenes.length) {
+    media.appendChild(renderProductCarousel(product, imagenes));
   } else {
     media.innerHTML = '<div class="img-placeholder">Imagen no disponible</div>';
   }
